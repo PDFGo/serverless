@@ -3,6 +3,26 @@ from io import BytesIO
 import PyPDF2
 import json
 import datetime
+# import magic
+
+
+def convertTodataUri(img_data):
+    encoded = base64.b64encode(
+        img_data).decode('utf-8')
+
+    signatures = {
+        '/9j/': 'image/jpeg',
+        'R0lGODdh': "image/gif",
+        'R0lGODlh': "image/gif",
+        'iVBORw0KGgo': "image/png",
+    }
+
+    def detectMimeType(b64):
+        for s in signatures:
+            if b64.startswith(s):
+                return signatures[s]
+
+    return "data:" + detectMimeType(encoded) + ";base64," + encoded
 
 
 def extract_images_from_pdf(base64_pdf):
@@ -25,18 +45,23 @@ def extract_images_from_pdf(base64_pdf):
                     if '/Filter' in image:
                         if image['/Filter'] == '/FlateDecode':
                             img_data = image._data
-                            images.append(base64.b64encode(
-                                img_data).decode('utf-8'))
+
+                            uri = convertTodataUri(img_data)
+
+                            images.append(uri)
 
                         elif image['/Filter'] == '/DCTDecode':
                             img_data = image._data
-                            images.append(base64.b64encode(
-                                img_data).decode('utf-8'))
+
+                            uri = convertTodataUri(img_data)
+
+                            images.append(uri)
                         elif image['/Filter'] == '/JPXDecode':
                             img_data = image._data
-                            images.append(base64.b64encode(
-                                img_data).decode('utf-8'))
 
+                            uri = convertTodataUri(img_data)
+
+                            images.append(uri)
     return images
 
 
