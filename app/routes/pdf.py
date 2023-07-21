@@ -1,8 +1,7 @@
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException
 from app.lib.utils import extract_images_from_pdf
 from pydantic import BaseModel
-from fastapi.responses import JSONResponse, StreamingResponse
-import json
+from fastapi.responses import JSONResponse
 
 router = APIRouter()
 
@@ -17,5 +16,10 @@ async def pdf_extract_images_stream(PdfBase64: PDFBase64):
     if not PdfBase64.base64:
         raise HTTPException(status_code=400, detail="No PDF base64 provided")
 
-    # Return the extracted image
-    return StreamingResponse(extract_images_from_pdf(PdfBase64.base64), media_type="application/json")
+    # Extract images from PDF
+    images = extract_images_from_pdf(PdfBase64.base64)
+
+    response = JSONResponse(content={"images": images, "total": len(images)})
+
+    return response;                            
+

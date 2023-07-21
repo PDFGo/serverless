@@ -11,6 +11,8 @@ def extract_images_from_pdf(base64_pdf):
 
     pdf_reader = PyPDF2.PdfReader(pdf_file)
 
+    images = []
+
     for page_number in range(len(pdf_reader.pages)):
         page = pdf_reader.pages[page_number]
 
@@ -23,26 +25,19 @@ def extract_images_from_pdf(base64_pdf):
                     if '/Filter' in image:
                         if image['/Filter'] == '/FlateDecode':
                             img_data = image._data
-                            response_data = {"message": "Image extracted successfully",
-                                             "images": base64.b64encode(img_data).decode('utf-8'),
-                                             "timestamp": datetime.datetime.now().timestamp()
-                                             }
-                            yield json.dumps(response_data).encode("utf-8") + b"\n"
+                            images.append(base64.b64encode(
+                                img_data).decode('utf-8'))
 
                         elif image['/Filter'] == '/DCTDecode':
                             img_data = image._data
-                            response_data = {"message": "Image extracted successfully",
-                                             "images": base64.b64encode(img_data).decode('utf-8'),
-                                             "timestamp": datetime.datetime.now().timestamp()
-                                             }
-                            yield json.dumps(response_data).encode("utf-8") + b"\n"
+                            images.append(base64.b64encode(
+                                img_data).decode('utf-8'))
                         elif image['/Filter'] == '/JPXDecode':
                             img_data = image._data
-                            response_data = {"message": "Image extracted successfully",
-                                             "images": base64.b64encode(img_data).decode('utf-8'),
-                                             "timestamp": datetime.datetime.now().timestamp()
-                                             }
-                            yield json.dumps(response_data).encode("utf-8") + b"\n"
+                            images.append(base64.b64encode(
+                                img_data).decode('utf-8'))
+
+    return images
 
 
 if __name__ == "__main__":
