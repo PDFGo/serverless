@@ -14,7 +14,7 @@ class PDFBase64(BaseModel):
 
 
 # Load environment variables from config.env
-load_dotenv("config.env")
+# load_dotenv("config.env")
 
 
 @router.post("/extract/images")
