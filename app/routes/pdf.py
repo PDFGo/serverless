@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.lib.utils import extract_images_from_pdf, upload_base64_image_to_s3
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from fastapi.responses import StreamingResponse
 
 
@@ -14,7 +14,7 @@ class PDFBase64(BaseModel):
 
 
 # Load environment variables from config.env
-load_dotenv("config.env")
+# load_dotenv("config.env")
 
 
 @router.post("/extract/images")
