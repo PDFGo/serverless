@@ -3,26 +3,30 @@ from io import BytesIO
 import PyPDF2
 import json
 import datetime
-# import magic
+import boto3
+import base64
+from fastapi import HTTPException
 
 
 def convertTodataUri(img_data):
     encoded = base64.b64encode(
         img_data).decode('utf-8')
 
-    signatures = {
-        '/9j/': 'image/jpeg',
-        'R0lGODdh': "image/gif",
-        'R0lGODlh': "image/gif",
-        'iVBORw0KGgo': "image/png",
-    }
+    # signatures = {
+    #     '/9j/': 'image/jpeg',
+    #     'R0lGODdh': "image/gif",
+    #     'R0lGODlh': "image/gif",
+    #     'iVBORw0KGgo': "image/png",
+    # }
 
-    def detectMimeType(b64):
-        for s in signatures:
-            if b64.startswith(s):
-                return signatures[s]
+    # def detectMimeType(b64):
+    #     for s in signatures:
+    #         if b64.startswith(s):
+    #             return signatures[s]
 
-    return "data:" + detectMimeType(encoded) + ";base64," + encoded
+    # return "data:" + detectMimeType(encoded) + ";base64," + encoded
+
+    return encoded
 
 
 def extract_images_from_pdf(base64_pdf):
@@ -63,6 +67,35 @@ def extract_images_from_pdf(base64_pdf):
 
                             images.append(uri)
     return images
+
+
+def upload_base64_image_to_s3(bucket_name, image_name, base64_data):
+    # Decode the Base64 data
+    image_data = base64.b64decode(base64_data)
+
+    # Create a Boto3 S3 client
+    s3_client = boto3.client('s3')
+
+    try:
+        # Upload the image data to S3
+        response = s3_client.put_object(
+            Bucket=bucket_name,
+            Key=image_name,
+            Body=image_data,
+            ACL='public-read',
+        )
+
+        if response['ResponseMetadata']['HTTPStatusCode'] == 200:
+            print(
+                f"Image '{image_name}' uploaded successfully to S3 bucket '{bucket_name}'.")
+        else:
+            print("Error uploading image to S3.")
+
+            # Get the public URL of the uploaded image
+        s3_url = f"https://{bucket_name}.s3.amazonaws.com/{image_name}"
+        return s3_url
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":
