@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 from app.lib.utils import extract_images_from_pdf, upload_base64_image_to_s3
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from typing import Dict
 import asyncio
 
