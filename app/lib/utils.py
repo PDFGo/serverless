@@ -1,8 +1,6 @@
 import base64
 from io import BytesIO
 import PyPDF2
-import json
-import datetime
 import boto3
 import base64
 from fastapi import HTTPException
