@@ -4,6 +4,7 @@ import PyPDF2
 import boto3
 import base64
 from fastapi import HTTPException
+from mimetypes import guess_extension
 
 
 def convertTodataUri(img_data):
@@ -22,9 +23,9 @@ def convertTodataUri(img_data):
     #         if b64.startswith(s):
     #             return signatures[s]
 
-    # return "data:" + detectMimeType(encoded) + ";base64," + encoded
+    return "data:" + guess_extension(encoded) + ";base64," + encoded
 
-    return encoded
+    # return encoded
 
 
 def extract_images_from_pdf(base64_pdf):
