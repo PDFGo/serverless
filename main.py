@@ -1,15 +1,15 @@
 from fastapi import FastAPI
-# from mangum import Mangum
+from mangum import Mangum
 from app.routes import pdf
 
 app = FastAPI()
-# handler = Mangum(app, lifespan="off")
+handler = Mangum(app)
 
 app.include_router(pdf.router, prefix="/api/v1/pdf", tags=["pdf"])
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Hello from goDPF"}
 
 if __name__ == "__main__":
     import uvicorn

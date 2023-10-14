@@ -2,3 +2,11 @@
 __pycache__/
 *.py[cod]
 config.env
+.vscode/
+
+dependencies
+
+Test/test.pdf
+Test/images
+
+*aws_lambda_archive.zip

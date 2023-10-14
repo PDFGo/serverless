@@ -10,9 +10,7 @@ class PDFBase64(BaseModel):
     base64: str
 
 
-
-
-@router.post("/extract/images")
+@router.post("/extract/images/")
 async def pdf_extract_images_stream(PdfBase64: PDFBase64):
 
     # parse the request body
